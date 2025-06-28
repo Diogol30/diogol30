@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía de Cócteles Clásicos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #fef7ed 0%, #fed7aa 100%);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header p {
+            font-size: 1.25rem;
+            color: #6b7280;
+            max-width: 42rem;
+            margin: 0 auto;
+        }
+
+        .cocktails-grid {
+            display: grid;
+            gap: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        }
+
+        .cocktail-card {
+            background: white;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .cocktail-card:hover {
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .cocktail-image {
+            position: relative;
+            height: 12rem;
+            overflow: hidden;
+            background: linear-gradient(45deg, #f59e0b, #d97706);
+        }
+
+        .cocktail-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .cocktail-image:hover img {
+            transform: scale(1.05);
+        }
+
+        .origin-badge {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background: rgba(255, 255, 255, 0.95);
+            color: #1f2937;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            backdrop-filter: blur(4px);
+            z-index: 10;
+        }
+
+        .card-header {
+            padding: 1.5rem 1.5rem 0;
+        }
+
+        .card-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+        }
+
+        .card-title h3 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #1f2937;
+        }
+
+        .difficulty-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .difficulty-easy {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .difficulty-medium {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .card-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .card-content {
+            padding: 1.5rem;
+        }
+
+        .tabs {
+            width: 100%;
+        }
+
+        .tabs-list {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            background: #f3f4f6;
+            border-radius: 0.5rem;
+            padding: 0.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .tab-trigger {
+            background: none;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #6b7280;
+            transition: all 0.2s ease;
+        }
+
+        .tab-trigger:hover {
+            color: #374151;
+        }
+
+        .tab-trigger.active {
+            background: white;
+            color: #1f2937;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .ingredients-list {
+            list-style: none;
+        }
+
+        .ingredients-list li {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            padding: 0.25rem 0;
+        }
+
+        .ingredient-dot {
+            width: 0.5rem;
+            height: 0.5rem;
+            background: #f59e0b;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .preparation-text, .history-text {
+            font-size: 0.875rem;
+            color: #374151;
+            line-height: 1.6;
+        }
+
+        .history-content {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+
+        .history-icon {
+            width: 1rem;
+            height: 1rem;
+            margin-top: 0.125rem;
+            color: #d97706;
+            flex-shrink: 0;
+        }
+
+        .footer {
+            margin-top: 4rem;
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid #e5e7eb;
+            color: #6b7280;
+        }
+
+        .loading-placeholder {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .cocktails-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+
+            .card-title {
+                flex-direction: column;
+                gap: 0.5rem;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🍸 Guía de Cócteles Clásicos</h1>
+            <p>Descubre la historia y preparación de los tragos más icónicos del mundo. Desde la elegante Margarita hasta el refrescante Mojito.</p>
+        </div>
+
+        <!-- Cocktails Grid -->
+        <div class="cocktails-grid" id="cocktailsGrid">
+            <!-- Los cócteles se generarán con JavaScript -->
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>🍹 ¡Disfruta responsablemente! Todos los cócteles pueden adaptarse a tu gusto personal. 🍹</p>
+        </div>
+    </div>
+
+    <script>
+        const cocktails = [
+            {
+                id: "margarita",
+                name: "Margarita",
+                origin: "México",
+                difficulty: "Fácil",
+                time: "5 min",
+                serves: "1",
+                image: "https://th.bing.com/th/id/OIP.HFYa2I3m29lA7VUsOpT3bwHaEo?r=0&rs=1&pid=ImgDetMain",
+                ingredients: [
+                    "60ml Tequila blanco",
+                    "30ml Cointreau o Triple Sec",
+                    "30ml Jugo de lima fresco",
+                    "Sal para el borde",
+                    "Hielo"
+                ],
+                preparation: "1. Humedece el borde del vaso con lima y pásalo por sal. 2. En una coctelera con hielo, agrega tequila, Cointreau y jugo de lima. 3. Agita vigorosamente por 15 segundos. 4. Cuela en el vaso preparado con hielo fresco. 5. Decora con una rodaja de lima.",
+                history: "La Margarita tiene varios orígenes disputados, pero la historia más aceptada la sitúa en 1938 en Tijuana, México. Carlos 'Danny' Herrera la creó en su restaurante Rancho La Gloria para una cliente alérgica a todos los licores excepto el tequila. El nombre honra a Margarita Henkel, una actriz de Ziegfeld Follies."
+            },
+            {
+                id: "mojito",
+                name: "Mojito",
+                origin: "Cuba",
+                difficulty: "Fácil",
+                time: "5 min",
+                serves: "1",
+                image: "https://th.bing.com/th/id/R.fec3c6b9114784ec31396366f0e3ecc6?rik=EWJdQLF0jaC01w&pid=ImgRaw&r=0",
+                ingredients: [
+                    "60ml Ron blanco",
+                    "30ml Jugo de lima",
+                    "2 cucharaditas Azúcar",
+                    "8-10 hojas de menta fresca",
+                    "Agua con gas",
+                    "Hielo"
+                ],
+                preparation: "1. En un vaso alto, coloca las hojas de menta y azúcar. 2. Machaca suavemente para liberar los aceites de la menta. 3. Agrega jugo de lima y ron. 4. Llena el vaso con hielo y completa con agua con gas. 5. Revuelve suavemente y decora con menta fresca.",
+                history: "El Mojito tiene sus raíces en el siglo XVI en Cuba. Se dice que fue creado por piratas y corsarios como Sir Francis Drake. Originalmente se llamaba 'El Draque' en honor al famoso corsario inglés. Ernest Hemingway lo popularizó en el bar La Bodeguita del Medio en La Habana."
+            },
+            {
+                id: "pina-colada",
+                name: "Piña Colada",
+                origin: "Puerto Rico",
+                difficulty: "Fácil",
+                time: "5 min",
+                serves: "1",
+                image: "https://recetinas.com/wp-content/uploads/2023/05/pina-colada-original.jpg",
+                ingredients: [
+                    "60ml Ron blanco",
+                    "90ml Jugo de piña",
+                    "30ml Crema de coco",
+                    "1 taza de hielo",
+                    "Rodaja de piña y cereza para decorar"
+                ],
+                preparation: "1. En una licuadora, combina ron, jugo de piña, crema de coco y hielo. 2. Licúa hasta obtener una consistencia suave. 3. Sirve en un vaso huracán o copa grande. 4. Decora con una rodaja de piña y una cereza. 5. Sirve con pajita.",
+                history: "La Piña Colada fue creada en 1954 por Ramón 'Monchito' Marrero en el Hotel Caribe Hilton de San Juan, Puerto Rico. Tardó tres meses en perfeccionar la receta. En 1978, se convirtió en la bebida oficial de Puerto Rico."
+            },
+            {
+                id: "manhattan",
+                name: "Manhattan",
+                origin: "Estados Unidos",
+                difficulty: "Intermedio",
+                time: "3 min",
+                serves: "1",
+                image: "https://www.foodandwine.com/thmb/cOQktLcqXd_pgef_tcS8jkNjV1E=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/Manhattan-Cocktail-FT-BLOG0522-dee9bf6e992f425eb496657aa2f14d47.jpg",
+                ingredients: [
+                    "60ml Whiskey de centeno",
+                    "30ml Vermut rojo dulce",
+                    "2-3 gotas Angostura bitters",
+                    "Cereza marrasquino",
+                    "Hielo"
+                ],
+                preparation: "1. En un vaso mezclador con hielo, combina whiskey, vermut y bitters. 2. Revuelve durante 30 segundos. 3. Cuela en una copa de cóctel fría. 4. Decora con una cereza marrasquino. 5. Opcionalmente, exprime la cáscara de naranja sobre la bebida.",
+                history: "El Manhattan fue creado en la década de 1870 en el Manhattan Club de Nueva York para una fiesta organizada por Lady Randolph Churchill (madre de Winston Churchill). Se estableció firmemente en la cultura americana y se considera uno de los cinco cócteles clásicos de Nueva York."
+            },
+            {
+                id: "martini",
+                name: "Martini",
+                origin: "Estados Unidos",
+                difficulty: "Intermedio",
+                time: "3 min",
+                serves: "1",
+                image: "https://th.bing.com/th/id/OIP.pJMvTvtFXqyfV_JldRNTwQHaE8?r=0&rs=1&pid=ImgDetMain",
+                ingredients: [
+                    "60ml Gin",
+                    "15ml Vermut seco",
+                    "Aceituna o twist de limón",
+                    "Hielo"
+                ],
+                preparation: "1. Enfría una copa de martini en el congelador. 2. En un vaso mezclador con hielo, combina gin y vermut. 3. Revuelve durante 30 segundos (no agites). 4. Cuela en la copa fría. 5. Decora con aceitunas o un twist de limón.",
+                history: "El Martini apareció por primera vez en la década de 1860. Su origen es disputado entre el Hotel Knickerbocker en Nueva York y un barman llamado Jerry Thomas. James Bond lo popularizó con su famosa frase 'agitado, no revuelto', aunque tradicionalmente se revuelve."
+            },
+            {
+                id: "daiquiri",
+                name: "Daiquiri",
+                origin: "Cuba",
+                difficulty: "Fácil",
+                time: "3 min",
+                serves: "1",
+                image: "https://assets.afcdn.com/recipe/20180705/80342_w2048h1536c1cx2772cy1848.jpg",
+                ingredients: [
+                    "60ml Ron blanco",
+                    "30ml Jugo de lima fresco",
+                    "15ml Jarabe simple",
+                    "Hielo",
+                    "Rodaja de lima"
+                ],
+                preparation: "1. En una coctelera con hielo, combina ron, jugo de lima y jarabe simple. 2. Agita vigorosamente por 15 segundos. 3. Cuela en una copa de cóctel fría. 4. Decora con una rodaja de lima. 5. Sirve inmediatamente.",
+                history: "El Daiquiri fue inventado alrededor de 1900 cerca de Santiago de Cuba por un ingeniero americano llamado Jennings Cox. Lo nombró por la playa Daiquiri, cerca de una mina de hierro donde trabajaba. Ernest Hemingway lo popularizó en El Floridita bar en La Habana."
+            },
+            {
+                id: "cosmopolitan",
+                name: "Cosmopolitan",
+                origin: "Estados Unidos",
+                difficulty: "Fácil",
+                time: "5 min",
+                serves: "1",
+                image: "https://recetasdecocina.elmundo.es/wp-content/uploads/2022/05/COSMOPOLITAN.jpg",
+                ingredients: [
+                    "45ml Vodka",
+                    "15ml Cointreau",
+                    "15ml Jugo de lima fresco",
+                    "30ml Jugo de arándano",
+                    "Hielo",
+                    "Twist de lima"
+                ],
+                preparation: "1. En una coctelera con hielo, combina vodka, Cointreau, jugo de lima y jugo de arándano. 2. Agita vigorosamente por 15 segundos. 3. Cuela en una copa de martini fría. 4. Decora con un twist de lima. 5. Sirve inmediatamente.",
+                history: "El Cosmopolitan moderno fue creado en 1987 por el barman Toby Cecchini en el Odeon de Manhattan, basándose en una receta de Cheryl Cook de Miami. Se popularizó enormemente en los años 90 gracias a la serie 'Sex and the City'."
+            },
+            {
+                id: "old-fashioned",
+                name: "Old Fashioned",
+                origin: "Estados Unidos",
+                difficulty: "Intermedio",
+                time: "5 min",
+                serves: "1",
+                image: "https://th.bing.com/th/id/OIP.-eBmgQDOja5QltWW5fsZDwHaEK?r=0&w=1200&h=675&rs=1&pid=ImgDetMain",
+                ingredients: [
+                    "60ml Bourbon o whiskey de centeno",
+                    "1 terrón de azúcar",
+                    "2-3 gotas Angostura bitters",
+                    "Splash de agua",
+                    "Hielo",
+                    "Cáscara de naranja"
+                ],
+                preparation: "1. En un vaso old fashioned, coloca el terrón de azúcar. 2. Agrega bitters y un splash de agua. 3. Machaca el azúcar hasta disolverlo. 4. Llena el vaso con hielo y agrega el whiskey. 5. Revuelve suavemente y decora con cáscara de naranja.",
+                history: "El Old Fashioned es uno de los cócteles más antiguos, originándose en la década de 1880. Su nombre proviene de los clientes que pedían su whiskey preparado 'a la antigua usanza' cuando los bartenders comenzaron a agregar demasiados ingredientes a los cócteles."
+            },
+            {
+                id: "negroni",
+                name: "Negroni",
+                origin: "Italia",
+                difficulty: "Fácil",
+                time: "3 min",
+                serves: "1",
+                image: "https://th.bing.com/th/id/R.8427a9280d6e0fa6136b121c17e4dc62?rik=ooZjB4yYYaU1zg&riu=http%3a%2f%2fassets.epicurious.com%2fphotos%2f579a2d8e437fcffe02f7230b%2fmaster%2fpass%2fcaipirinha-072816.jpg&ehk=s0czYnnZZEV1%2bJel%2ff8vrWWdrNjwq%2fQoC13AsmGN2Ys%3d&risl=&pid=ImgRaw&r=0",
+                ingredients: [
+                    "30ml Gin",
+                    "30ml Campari",
+                    "30ml Vermut rojo dulce",
+                    "Hielo",
+                    "Rodaja de naranja"
+                ],
+                preparation: "1. En un vaso old fashioned con hielo, combina gin, Campari y vermut en partes iguales. 2. Revuelve suavemente durante 30 segundos. 3. Decora con una rodaja de naranja. 4. Sirve inmediatamente. 5. Opcionalmente, puedes flamear la cáscara de naranja.",
+                history: "El Negroni fue inventado en 1919 en Florencia, Italia, por el Conde Camillo Negroni. Pidió al barman Fosco Scarselli que fortaleciera su Americano favorito reemplazando el agua con gas por gin. Se convirtió en el aperitivo italiano por excelencia."
+            },
+            {
+                id: "caipirinha",
+                name: "Caipirinha",
+                origin: "Brasil",
+                difficulty: "Fácil",
+                time: "5 min",
+                serves: "1",
+                image: "https://images.unsplash.com/photo-1595981267035-7b04ca84a82d?w=400&h=300&fit=crop&crop=center",
+                ingredients: [
+                    "60ml Cachaça",
+                    "1/2 lima cortada en gajos",
+                    "2 cucharaditas Azúcar",
+                    "Hielo picado"
+                ],
+                preparation: "1. En un vaso old fashioned, coloca los gajos de lima y azúcar. 2. Machaca vigorosamente para extraer el jugo y aceites de la lima. 3. Llena el vaso con hielo picado. 4. Agrega la cachaça y revuelve bien. 5. Sirve con pajita corta.",
+                history: "La Caipirinha es la bebida nacional de Brasil y tiene sus orígenes en el siglo XIX en el estado de São Paulo. Inicialmente se usaba como remedio para la gripe española, combinando cachaça con lima, ajo y miel. Con el tiempo evolucionó hasta convertirse en la refrescante bebida que conocemos hoy."
+            }
+        ];
+
+        function createCocktailCard(cocktail) {
+            return `
+                <div class="cocktail-card">
+                    <div class="cocktail-image">
+                        <div class="origin-badge">${cocktail.origin}</div>
+                        <img src="${cocktail.image}" alt="${cocktail.name}" loading="lazy" onerror="this.style.display='none'; this.parentElement.innerHTML += '<div style=\\'display:flex;align-items:center;justify-content:center;height:100%;color:white;font-size:2rem;\\'>🍹</div>';">
+                    </div>
+                    <div class="card-header">
+                        <div class="card-title">
+                            <h3>${cocktail.name}</h3>
+                            <span class="difficulty-badge ${cocktail.difficulty === 'Fácil' ? 'difficulty-easy' : 'difficulty-medium'}">
+                                ${cocktail.difficulty}
+                            </span>
+                        </div>
+                        <div class="card-meta">
+                            <div class="meta-item">
+                                <span>⏱️</span>
+                                ${cocktail.time}
+                            </div>
+                            <div class="meta-item">
+                                <span>👥</span>
+                                ${cocktail.serves} persona
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="tabs">
+                            <div class="tabs-list">
+                                <button class="tab-trigger active" onclick="switchTab(event, '${cocktail.id}', 'ingredients')">
+                                    Ingredientes
+                                </button>
+                                <button class="tab-trigger" onclick="switchTab(event, '${cocktail.id}', 'preparation')">
+                                    Preparación
+                                </button>
+                                <button class="tab-trigger" onclick="switchTab(event, '${cocktail.id}', 'history')">
+                                    Historia
+                                </button>
+                            </div>
+                            <div id="${cocktail.id}-ingredients" class="tab-content active">
+                                <ul class="ingredients-list">
+                                    ${cocktail.ingredients.map(ingredient => `
+                                        <li>
+                                            <div class="ingredient-dot"></div>
+                                            ${ingredient}
+                                        </li>
+                                    `).join('')}
+                                </ul>
+                            </div>
+                            <div id="${cocktail.id}-preparation" class="tab-content">
+                                <p class="preparation-text">${cocktail.preparation}</p>
+                            </div>
+                            <div id="${cocktail.id}-history" class="tab-content">
+                                <div class="history-content">
+                                    <div class="history-icon">📚</div>
+                                    <p class="history-text">${cocktail.history}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function switchTab(event, cocktailId, tabName) {
+            // Remove active class from all tabs in this cocktail
+            const cocktailCard = event.target.closest('.cocktail-card');
+            const allTabs = cocktailCard.querySelectorAll('.tab-trigger');
+            const allContents = cocktailCard.querySelectorAll('.tab-content');
+            
+            allTabs.forEach(tab => tab.classList.remove('active'));
+            allContents.forEach(content => content.classList.remove('active'));
+            
+            // Add active class to clicked tab and corresponding content
+            event.target.classList.add('active');
+            document.getElementById(`${cocktailId}-${tabName}`).classList.add('active');
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            const grid = document.getElementById('cocktailsGrid');
+            
+            // Show loading state
+            grid.innerHTML = '<div style="text-align: center; padding: 2rem; color: #6b7280;">🍸 Cargando cócteles deliciosos... 🍸</div>';
+            
+            // Simulate loading delay for better UX
+            setTimeout(() => {
+                grid.innerHTML = cocktails.map(cocktail => createCocktailCard(cocktail)).join('');
+            }, 500);
+        });
+
+        // Add some interactive effects
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add scroll animation
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+
+            // Observe all cocktail cards after they're created
+            setTimeout(() => {
+                document.querySelectorAll('.cocktail-card').forEach(card => {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(20px)';
+                    card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                    observer.observe(card);
+                });
+            }, 600);
+        });
+    </script>
+</body>
+</html>
